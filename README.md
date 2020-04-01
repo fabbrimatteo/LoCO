@@ -1,7 +1,7 @@
 # Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation
-### Submitted to CVPR 2020 (Paper ID: 7884)
+### Accepted to CVPR 2020
 
-This repo contains the code relating to the paper submitted to CVPR 2020 (Paper ID: 7884) with the instructions for training and testing our models on the JTA dataset.
+This repo contains the code related to the paper accepted to CVPR 2020 with the instructions for training and testing our models on the JTA dataset. I will add code and models for Panoptic and Human3.6m soon.
 
 
 ## Some Results
@@ -49,7 +49,7 @@ to generate the `<your_jta_path>/poses` directory
 - Run `python to_imgs.py --out_dir_path='frames' --img_format='jpg'`
 ([link](https://github.com/fabbrimatteo/JTA-Dataset)) 
  to generate the `<your_jta_path>/frames` directory
-- Download our precomputed codes from [here](https://drive.google.com/file/d/1nA881N0sccFfF6KQ004UrXBvLieX-kcl/view?usp=sharing) 
+- Download our precomputed codes from [here](https://drive.google.com/file/d/1aj2QqoUvkzzM4ZeehvIFOvMAO_OOtR8v/view?usp=sharing) 
 and unzip them into `<your_jta_path>`
 - Modify the `conf/default.yaml` configuration file specifying the 
 path to the JTA dataset directory
@@ -66,8 +66,22 @@ path to the JTA dataset directory
     it is advisable to carry out a training of at least 100 epochs
 
 #### Show Paper Results
-- Download the [pretrained weights](https://drive.google.com/file/d/1WGtKReEiupwhxxSdbcdySbHgAOjA-M4H/view?usp=sharing)
+- Download the [pretrained weights](https://drive.google.com/file/d/1GJNq4R3046bXkm7EXJAJ8L0PzRRQZDPg/view?usp=sharing)
  and extract them into the project folder
 - Modify the `conf/pretrained.yaml` configuration file specifying the path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
 - run `python show.py --exp_name=pretrained` (python >= 3.6)
+
+## Citation
+
+We believe in open research and we are happy if you find this data useful.   
+If you use it, please cite our work.
+
+```latex
+@inproceedings{fabbri2020compressed,
+   title     = {Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation},
+   author    = {Fabbri, Matteo and Lanzi, Fabio and Calderara, Simone and Alletto, Stefano and Cucchiara, Rita},
+   booktitle = {Conference on Computer Vision and Pattern Recognition (CVPR)},
+   year      = {2020}
+ }
+```
