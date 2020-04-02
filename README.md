@@ -1,7 +1,7 @@
-# Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation
+# Learning on Compressed Output (LoCO)
 ### Accepted to CVPR 2020
 
-This repo contains the code related to the paper accepted to CVPR 2020 with the instructions for training and testing our models on the JTA dataset. I will add code and models for Panoptic and Human3.6m soon.
+This repo contains the code related to the paper [Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation](https://arxiv.org/abs/2004.00329) accepted to CVPR 2020 with the instructions for training and testing our models on the JTA dataset. I will add code and models for Panoptic and Human3.6m soon.
 
 
 ## Some Results
