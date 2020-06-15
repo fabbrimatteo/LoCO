@@ -8,4 +8,4 @@ BATCH_SIZE: 1
 DEVICE: 'cuda'
 EPOCH_LEN: 4096
 TEST_SET_LEN: 128
-JTA_PATH: '/u/big/home/fabbrim/Datasets/JTA'
+JTA_PATH: '/path/of/jta/root/directory'
