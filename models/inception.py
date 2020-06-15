@@ -31,18 +31,18 @@ class Inception3(nn.Module):
         self.Mixed_7b = InceptionE(1280)
         self.Mixed_7c = InceptionE(2048)
 
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
-                import scipy.stats as stats
-
-                stddev = m.stddev if hasattr(m, 'stddev') else 0.1
-                X = stats.truncnorm(-2, 2, scale=stddev)
-                values = torch.Tensor(X.rvs(m.weight.data.numel()))
-                values = values.view(m.weight.data.size())
-                m.weight.data.copy_(values)
-            elif isinstance(m, nn.BatchNorm2d):
-                m.weight.data.fill_(1)
-                m.bias.data.zero_()
+        # for m in self.modules():
+        #     if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+        #         import scipy.stats as stats
+        #
+        #         stddev = m.stddev if hasattr(m, 'stddev') else 0.1
+        #         X = stats.truncnorm(-2, 2, scale=stddev)
+        #         values = torch.Tensor(X.rvs(m.weight.data.numel()))
+        #         values = values.view(m.weight.data.size())
+        #         m.weight.data.copy_(values)
+        #     elif isinstance(m, nn.BatchNorm2d):
+        #         m.weight.data.fill_(1)
+        #         m.bias.data.zero_()
 
 
     def forward(self, x):

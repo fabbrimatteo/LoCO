@@ -4,21 +4,21 @@
 from typing import Tuple
 
 import click
-import cv2
 import numpy as np
+import torch
+import nms3d_cuda
 from mayavi import mlab
 from torch.utils.data import DataLoader
-import nms3d_cuda
-import torch
 
 import utils
-from association import coords_to_poses
 from conf import Conf
 from dataset.test_set import JTATestSet
 from models import Autoencoder
 from models import CodePredictor
 from models import Refiner
 from pose import Pose
+from post_processing import joint_association, filter_joints, refine_pose
+
 
 # useful colors
 LIMB_COLORS = [(231 / 255, 76 / 255, 60 / 255), (60 / 255, 222 / 255, 157 / 255)]
@@ -56,7 +56,7 @@ def dist(p1, p2):
     """
     Returns the Euclidean distance between points `p1` and `p2`
     """
-    return np.sqrt((p1[1] - p2[1])**2 + (p1[2] - p2[2])**2 + (p1[3] - p2[3])**2)
+    return np.sqrt((p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2 + (p1[3] - p2[3]) ** 2)
 
 
 def show_poses(poses):
@@ -74,19 +74,13 @@ def show_poses(poses):
 
         # draw links
         for c, limb in enumerate(Pose.LIMBS_14):
-            type_a, type_b = limb
-            jas = [j for j in coords if j[0] == type_a]  # all joints of type 'type_a'
-            jbs = [j for j in coords if j[0] == type_b]  # all joints of type 'type_b'
-            a = jas[0] if len(jas) == 1 else None
-            b = jbs[0] if len(jbs) == 1 else None
-            if a is not None and b is not None and dist(a, b) < 1:
-                draw_tube(p1=(a[1], a[2], a[3]), p2=(b[1], b[2], b[3]), color=LIMB_COLORS[LIMBS_LR[c]])
+            joint_a = coords[limb[0]]
+            joint_b = coords[limb[1]]
+            draw_tube(p1=joint_a, p2=joint_b, color=LIMB_COLORS[LIMBS_LR[c]])
 
         # draw a sphere for each 3D point
         for c in coords:
-            jtype, x3d, y3d, z3d = c
-            point3d = (x3d, y3d, z3d)
-            draw_sphere(point3d, color=BLUE)
+            draw_sphere(c, color=BLUE)
 
     mlab.show()
 
@@ -113,7 +107,7 @@ def results(cnf):
 
     # init Hole Filler
     refiner = Refiner(pretrained=True)
-    refiner.to(cnf.device)
+    # refiner.to(cnf.device)
     refiner.eval()
     refiner.requires_grad(False)
 
@@ -134,66 +128,52 @@ def results(cnf):
         # code --> [decode] --> hmap
         hmap_pred = autoencoder.decode(code_pred).squeeze()
 
-        # hmap --> [local maxima search] --> pseudo-3D coordinates
-        # coords2d_pred, confs = utils.local_maxima_3d(hmap_pred, threshold=0.2, device=cnf.device, ret_confs=True)
-
         # hmap --> [local maxima search with cuda kernel] --> pseudo-3D coordinates
-        coords2d_pred = []
-        confs = []
+        pseudo3d_coords_pred = []
+        confidences = []
         for jtype, hmp in enumerate(hmap_pred):
-            res = nms3d_cuda.NMSFilter3d(torch.nn.ConstantPad3d(1, 0)(hmp), 3, 1)
-            nz = torch.nonzero(res).cpu()
-            for el in nz:
-                confid = res[tuple(el)]
-                if confid > 0.1:
-                    coords2d_pred.append((jtype, el[0].item(), el[1].item(), el[2].item()))
-                    confs.append(confid.cpu())
+            suppressed_hmap = nms3d_cuda.NMSFilter3d(torch.nn.ConstantPad3d(1, 0)(hmp), 3, 1)
+            nonzero_coords = torch.nonzero(suppressed_hmap).cpu()
+            for coord in nonzero_coords:
+                confidence = suppressed_hmap[tuple(coord)]
+                if confidence > cnf.nms_th:
+                    pseudo3d_coords_pred.append((jtype, coord[0].item(), coord[1].item(), coord[2].item()))
+                    confidences.append(confidence.cpu())
 
-        # pseudo-3D coordinates --> [to_3d] --> real 3D coordinates
+        # pseudo-3D coordinates --> [reverse projection] --> real 3D coordinates
         coords3d_pred = []
-        for i in range(len(coords2d_pred)):
-            joint_type, cam_dist, y2d, x2d = coords2d_pred[i]
-            x2d, y2d, cam_dist = utils.rescale_to_real(x2d, y2d, cam_dist)
+        for i in range(len(pseudo3d_coords_pred)):
+            joint_type, cam_dist, y2d, x2d = pseudo3d_coords_pred[i]
+            x2d, y2d, cam_dist = utils.rescale_to_real(x2d, y2d, cam_dist, q=cnf.q)
             x3d, y3d, z3d = utils.to3d(x2d, y2d, cam_dist, fx=fx, fy=fy, cx=cx, cy=cy)
             coords3d_pred.append((joint_type, x3d, y3d, z3d))
+        filter_joints(coords3d_pred, duplicate_th=0.05)
 
         # real 3D coordinates --> [association] --> list of poses
-        poses = coords_to_poses(coords3d_pred, confs)
+        poses = joint_association(coords3d_pred)
 
-        # list of poses ---> [pose refiner] ---> refined list of poses
+        # 3D poses -> [refiner] -> refined 3D poses
         refined_poses = []
-        for person_id, pose in enumerate(poses):
-            confidences = [j.confidence for j in pose]
-            pose = [(joint.type, joint.x3d, joint.y3d, joint.z3d) for joint in pose]
-            refined_pose = refiner.refine(pose=pose, hole_th=0.2, confidences=confidences, replace_th=1)
-            refined_poses.append(refined_pose)
-
-        # show input
-        img = cv2.imread(frame_path[0])
-        cv2.imshow('input image', img)
+        for _pose in poses:
+            refined_pose = refine_pose(pose=_pose, refiner=refiner)
+            if refined_pose is not None:
+                refined_poses.append(refined_pose)
 
         # show output
+        print(f'\n\t▶▶ Showing results of \'{frame_path[0]}\'')
+        print(f'\t▶▶ It may take some time: please wait')
+        print(f'\t▶▶ Close mayavi window to continue')
         show_poses(refined_poses)
 
 
 @click.command()
 @click.option('--exp_name', type=str, default='default')
-@click.option('--conf_file_path', type=str, default=None)
-@click.option('--seed', type=int, default=None)
-def main(exp_name, conf_file_path, seed):
-    # type: (str, str, int) -> None
+def main(exp_name):
+    # type: (str) -> None
 
-    # if `exp_name` contains a '@' character,
-    # the number following '@' is considered as
-    # the desired random seed for the experiment
-    split = exp_name.split('@')
-    if len(split) == 2:
-        seed = int(split[1])
-        exp_name = split[0]
+    cnf = Conf(exp_name=exp_name)
 
-    cnf = Conf(conf_file_path=conf_file_path, seed=seed, exp_name=exp_name)
-
-    print(f'\n▶ Showing visual results of experiment \'{exp_name}\'')
+    print(f'▶ Results of experiment \'{exp_name}\'')
     results(cnf=cnf)
 
 

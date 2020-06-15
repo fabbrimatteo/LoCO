@@ -3,9 +3,10 @@ Q: 0.317
 LR: 0.0001
 EPOCHS: 999
 DET_TH: 0.4
+NMS_TH: 0.1
 N_WORKERS: 8
 BATCH_SIZE: 1
 DEVICE: 'cuda'
 EPOCH_LEN: 4096
 TEST_SET_LEN: 128
-JTA_PATH: '/path/of/jta/root/directory'
+JTA_PATH: '/nas/JTA'

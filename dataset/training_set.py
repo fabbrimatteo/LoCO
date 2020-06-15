@@ -65,7 +65,7 @@ class JTATrainingSet(Dataset):
 
 
 def main():
-    cnf = Conf(exp_name='../conf/cp_100_jta.yaml', conf_file_path='../conf/cp_100_jta.yaml')
+    cnf = Conf(exp_name='default')
     ds = JTATrainingSet(cnf=cnf)
 
     for i in range(len(ds)):

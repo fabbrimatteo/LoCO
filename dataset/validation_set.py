@@ -81,7 +81,7 @@ class JTAValidationSet(Dataset):
 
 
 def main():
-    ds = JTAValidationSet(cnf=Conf(exp_name='../conf/cp_100_jta.yaml', conf_file_path='../conf/cp_100_jta.yaml'))
+    ds = JTAValidationSet(cnf=Conf(exp_name='default'))
 
     for i in range(len(ds)):
         frame, gt_3d, _, _, _, _, frame_path = ds[i]

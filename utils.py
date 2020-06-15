@@ -9,6 +9,7 @@ import torch
 from PIL.Image import Image
 from path import Path
 
+
 MAX_LS = np.array([0.27, 0.41, 0.67, 0.93, 0.41, 0.67, 0.92, 0.88, 1.28, 1.69, 0.88, 1.29, 1.70])
 
 
@@ -81,7 +82,7 @@ def local_maxima_3d(hmaps3d, threshold, device='cuda', ret_confs=False):
         return peaks
 
 
-def rescale_to_real(x2d, y2d, cam_dist, q=0.317):
+def rescale_to_real(x2d, y2d, cam_dist, q):
     # type: (int, int, float, float) -> Tuple[int, int, float]
     """
     :param x2d: predicted `x2d` (real_x2d // 8)
@@ -110,8 +111,9 @@ def to3d(x2d, y2d, cam_dist, fx, fy, cx, cy):
     """
 
     k = (-1) * np.sqrt(
-        fx**2 * fy**2 + fx**2 * cy**2 - 2 * fx**2 * cy * y2d + fx**2 * y2d**2 +
-        fy**2 * cx**2 - 2 * fy**2 * cx * x2d + fy**2 * x2d**2)
+        fx ** 2 * fy ** 2 + fx ** 2 * cy ** 2 - 2 * fx ** 2 * cy * y2d + fx ** 2 * y2d ** 2 +
+        fy ** 2 * cx ** 2 - 2 * fy ** 2 * cx * x2d + fy ** 2 * x2d ** 2
+    )
 
     x3d = ((fy * cam_dist * cx) - (fy * cam_dist * x2d)) / k
     y3d = ((fx * cy * cam_dist) - (fx * cam_dist * y2d)) / k

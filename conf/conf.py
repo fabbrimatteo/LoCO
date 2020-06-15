@@ -58,7 +58,7 @@ class Conf(object):
 
         # if the configuration file is not specified
         # try to load a configuration file based on the experiment name
-        tmp = Path('conf') / (self.exp_name + '.yaml')
+        tmp = Path(__file__).parent / (self.exp_name + '.yaml')
         if conf_file_path is None and tmp.exists():
             conf_file_path = tmp
 
@@ -67,7 +67,7 @@ class Conf(object):
             y = {}
         else:
             conf_file = open(conf_file_path, 'r')
-            y = yaml.load(conf_file)
+            y = yaml.load(conf_file, Loader=yaml.FullLoader)
 
         # read configuration parameters from YAML file
         # or set their default value
@@ -76,6 +76,7 @@ class Conf(object):
         self.lr = y.get('LR', 0.0001)  # type: float # --> learning rate
         self.epochs = y.get('EPOCHS', 999)  # type: int
         self.det_th = y.get('DET_TH', 0.4)  # type: float # --> detection threshold for test metrics
+        self.nms_th = y.get('NMS_TH', 0.1)  # type: float
         self.n_workers = y.get('N_WORKERS', 0)  # type: int
         self.batch_size = y.get('BATCH_SIZE', 1)  # type: int
         self.epoch_len = y.get('EPOCH_LEN', 4096)  # type: int
