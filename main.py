@@ -11,11 +11,10 @@ cudnn.benchmark = True
 
 
 @click.command()
-@click.option('--exp_name', type=str, default='default')
-@click.option('--conf_file_path', type=str, default=None)
+@click.argument('exp_name', type=str, default='default')
 @click.option('--seed', type=int, default=None)
-def main(exp_name, conf_file_path, seed):
-    # type: (str, str, int) -> None
+def main(exp_name, seed):
+    # type: (str, int) -> None
 
     # if `exp_name` contains a '@' character,
     # the number following '@' is considered as
@@ -25,7 +24,7 @@ def main(exp_name, conf_file_path, seed):
         seed = int(split[1])
         exp_name = split[0]
 
-    cnf = Conf(conf_file_path=conf_file_path, seed=seed, exp_name=exp_name)
+    cnf = Conf(seed=seed, exp_name=exp_name)
 
     print(f'\n▶ Starting Experiment \'{exp_name}\' [seed: {cnf.seed}]')
 

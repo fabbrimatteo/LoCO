@@ -8,6 +8,7 @@ from typing import Optional
 import numpy as np
 import torch
 import yaml
+import os
 from path import Path
 
 
@@ -71,7 +72,6 @@ class Conf(object):
 
         # read configuration parameters from YAML file
         # or set their default value
-
         self.q = y.get('Q', 0.317)  # type: float # --> quantization factor
         self.lr = y.get('LR', 0.0001)  # type: float # --> learning rate
         self.epochs = y.get('EPOCHS', 999)  # type: int
@@ -83,8 +83,11 @@ class Conf(object):
         self.jta_path = y.get('JTA_PATH', './jta')  # type: str
         self.test_set_len = y.get('TEST_SET_LEN', 128)  # type: int
 
-        default_dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.device = y.get('DEVICE', default_dev)  # type: str
+        if y.get('DEVICE', None) is not None:
+            os.environ['CUDA_VISIBLE_DEVICES'] = str(y.get('DEVICE').split(':')[1])
+            self.device = 'cuda:0'
+        else:
+            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         self.jta_path = Path(self.jta_path)
         assert self.jta_path.exists(), 'the specified directory for the JTA-Dataset does not exists'

@@ -92,23 +92,19 @@ class Autoencoder(BaseModel):
 
     def encode(self, x):
         # type: (torch.Tensor) -> torch.Tensor
-        es = []
-        for i in range(14):
-            e = self.encoder(x[:, i, ...]).unsqueeze(1)
-            es.append(e)
-        x = torch.cat(es, 1)
+
+        x = self.encoder(torch.reshape(x, (x.shape[0] * 14, x.shape[2], x.shape[3], x.shape[4])).contiguous())
+        x = torch.reshape(x, (x.shape[0] // 14, 14, x.shape[1], x.shape[2], x.shape[3])).contiguous()
+
         x = self.fuser(x)
         return x
 
 
     def decode(self, x):
-        # type: (torch.Tensor) -> torch.Tensor
         x = self.defuser(x)
-        ds = []
-        for i in range(14):
-            d = self.decoder(x[:, i, ...]).unsqueeze(1)
-            ds.append(d)
-        x = torch.cat(ds, 1)
+
+        x = self.decoder(torch.reshape(x, (x.shape[0] * 14, x.shape[2], x.shape[3], x.shape[4])).contiguous())
+        x = torch.reshape(x, (x.shape[0] // 14, 14, x.shape[1], x.shape[2], x.shape[3])).contiguous()
         return x
 
 

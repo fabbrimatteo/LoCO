@@ -1,7 +1,9 @@
 # Learning on Compressed Output (LoCO)
 ### Accepted to CVPR 2020
 
-This repo contains the code related to the paper [Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation](https://arxiv.org/abs/2004.00329) accepted to CVPR 2020 with the instructions for training and testing our models on the JTA dataset. I will add code and models for Panoptic and Human3.6m soon.
+This repo contains the code related to the paper [Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation](https://arxiv.org/abs/2004.00329) 
+accepted to CVPR 2020 with the instructions for training and testing our models on the JTA dataset. [Here](https://github.com/fabbrimatteo/VHA)
+you can also find the code for training the Volumetric Heatmap Autoencoder.
 
 
 ## Some Results
@@ -56,10 +58,10 @@ path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
 
 #### Train
-- run `python train.py --exp_name=default` (python >= 3.6)
+- run `python main.py default` (python >= 3.6)
 
 #### Show Visual Results
-- run `python show.py --exp_name=default` (python >= 3.6)
+- run `python show.py default` (python >= 3.6)
     - Note that, before showing the results, you must have 
     completed at least one training epoch; however, to achieve 
     results comparable to those reported in the paper, 
@@ -70,7 +72,7 @@ path to the JTA dataset directory
  and extract them into the project folder
 - Modify the `conf/pretrained.yaml` configuration file specifying the path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
-- run `python show.py --exp_name=pretrained` (python >= 3.6)
+- run `python show.py pretrained` (python >= 3.6)
 
 ## Citation
 

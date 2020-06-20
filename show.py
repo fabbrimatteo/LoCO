@@ -167,7 +167,7 @@ def results(cnf):
 
 
 @click.command()
-@click.option('--exp_name', type=str, default='default')
+@click.argument('exp_name', type=str, default='default')
 def main(exp_name):
     # type: (str) -> None
 
