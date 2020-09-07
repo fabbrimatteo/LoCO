@@ -1,4 +1,5 @@
 # Learning on Compressed Output (LoCO)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 ### Accepted to CVPR 2020
 
 This repo contains the code related to the paper [Compressed Volumetric Heatmaps for Multi-Person 3D Pose Estimation](https://arxiv.org/abs/2004.00329) 
