@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 
 import utils
 from conf import Conf
-from dataset.test_set import JTATestSet
+from dataset.validation_set import JTAValidationSet
 from models import Autoencoder
 from models import CodePredictor
 from models import Refiner
@@ -112,7 +112,7 @@ def results(cnf):
     refiner.requires_grad(False)
 
     # init data loader
-    ts = JTATestSet(cnf=cnf)
+    ts = JTAValidationSet(cnf=cnf)
     loader = DataLoader(dataset=ts, batch_size=1, shuffle=False, num_workers=0)
 
     for step, sample in enumerate(loader):
