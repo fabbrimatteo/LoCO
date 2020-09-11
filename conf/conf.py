@@ -72,7 +72,7 @@ class Conf(object):
 
         # read configuration parameters from YAML file
         # or set their default value
-        self.q = y.get('Q', 0.317)  # type: float # --> quantization factor
+        self.q = y.get('Q', 0.31746031746031744)  # type: float # --> quantization factor
         self.lr = y.get('LR', 0.0001)  # type: float # --> learning rate
         self.epochs = y.get('EPOCHS', 999)  # type: int
         self.det_th = y.get('DET_TH', 0.4)  # type: float # --> detection threshold for test metrics

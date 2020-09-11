@@ -55,7 +55,7 @@ class CodePredictor(BaseModel):
         # type: () -> None
         super().__init__()
 
-        self.f_extractor = Inception3()
+        self.f_extractor = Inception3(transform_input=True)
         self.main = nn.Sequential(
             BasicBlockTransposed(in_channels=2048, out_channels=1024),
             BasicBlock(in_channels=1024, out_channels=512),
