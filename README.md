@@ -73,7 +73,8 @@ path to the JTA dataset directory
  and extract them into the project folder
 - Modify the `conf/pretrained.yaml` configuration file specifying the path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
-- run `python show.py pretrained` (python >= 3.6)
+- run `python show.py pretrained` to show qualitative results (python >= 3.6)
+- run `python eval.py pretrained` to obtain the results reported in the paper (python >= 3.6)
 
 ## Citation
 
