@@ -14,24 +14,24 @@ you can also find the code for training the Volumetric Heatmap Autoencoder.
     <th>Prediction</th>
   </tr>
   <tr>
-    <th><img src=imgs/sample_1.jpg width=960></th>
-    <th><img src=imgs/sample_1.gif width=960></th>
+    <th><img src=imgs/sample_1.jpg width=400></th>
+    <th><img src=imgs/sample_1.gif width=400></th>
   </tr>
   <tr>
-    <th><img src=imgs/sample_2.jpg width=960></th>
-    <th><img src=imgs/sample_2.gif width=960></th>
+    <th><img src=imgs/sample_2.jpg width=400></th>
+    <th><img src=imgs/sample_2.gif width=400></th>
   </tr>
   <tr>
-    <th><img src=imgs/sample_3.jpg width=960></th>
-    <th><img src=imgs/sample_3.gif width=960></th>
+    <th><img src=imgs/sample_3.jpg width=400></th>
+    <th><img src=imgs/sample_3.gif width=400></th>
   </tr>
   <tr>
-    <th><img src=imgs/sample_5.jpg width=960></th>
-    <th><img src=imgs/sample_5.gif width=960></th>
+    <th><img src=imgs/sample_5.jpg width=400></th>
+    <th><img src=imgs/sample_5.gif width=400></th>
   </tr>
   <tr>
-    <th><img src=imgs/sample_4.jpg width=960></th>
-    <th><img src=imgs/sample_4.gif width=960></th>
+    <th><img src=imgs/sample_4.jpg width=400></th>
+    <th><img src=imgs/sample_4.gif width=400></th>
   </tr>
 </table>
 
@@ -52,7 +52,7 @@ to generate the `<your_jta_path>/poses` directory
 - Run `python to_imgs.py --out_dir_path='frames' --img_format='jpg'`
 ([link](https://github.com/fabbrimatteo/JTA-Dataset)) 
  to generate the `<your_jta_path>/frames` directory
-- Download our precomputed codes from [here](https://drive.google.com/file/d/1aj2QqoUvkzzM4ZeehvIFOvMAO_OOtR8v/view?usp=sharing) 
+- Download our precomputed codes from [here](https://ailb-web.ing.unimore.it/publicfiles/drive/CVPR%202020%20-%20LoCO/codes.zip) 
 and unzip them into `<your_jta_path>`
 - Modify the `conf/default.yaml` configuration file specifying the 
 path to the JTA dataset directory
@@ -69,7 +69,7 @@ path to the JTA dataset directory
     it is advisable to carry out a training of at least 100 epochs
 
 #### Show Paper Results
-- Download the [pretrained weights](https://drive.google.com/file/d/1GJNq4R3046bXkm7EXJAJ8L0PzRRQZDPg/view?usp=sharing)
+- Download the [pretrained weights](https://ailb-web.ing.unimore.it/publicfiles/drive/CVPR%202020%20-%20LoCO/pretrained.zip)
  and extract them into the project folder
 - Modify the `conf/pretrained.yaml` configuration file specifying the path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
