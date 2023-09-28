@@ -69,7 +69,7 @@ path to the JTA dataset directory
     it is advisable to carry out a training of at least 100 epochs
 
 #### Show Paper Results
-- Download the [pretrained weights](https://ailb-web.ing.unimore.it/publicfiles/drive/CVPR%202020%20-%20LoCO/pretrained.zip)
+- Download the [pretrained weights](https://drive.google.com/file/d/1YkEoZN7Laxxz-LrWfiaL8VCgEG2RPv4T/view?usp=sharing)
  and extract them into the project folder
 - Modify the `conf/pretrained.yaml` configuration file specifying the path to the JTA dataset directory
      - `JTA_PATH: <your_jta_path>`
